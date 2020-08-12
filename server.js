@@ -1,5 +1,5 @@
 // Setup empty JS object to act as endpoint for all routes
-projectData = [{"date": "15 August 2020", "temperature": "75", "feelings": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, vitae."}];
+projectData = [{"date": "11 August 2020", "temperature": "75", "feelings": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, vitae."}];
 
 // Require Express to run server and routes
 const express = require('express');

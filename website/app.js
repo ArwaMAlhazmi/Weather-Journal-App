@@ -44,9 +44,10 @@ const getData = async () => {
 }
 
 /* Function to Display Entries/ Build UI Records */
-function updateEntries(entry){
+function updateUI(entry){
 	const entriesDiv = document.querySelector('.holder-entry');
 
+	
 	const entryHolder = document.createElement('div');
 	entryHolder.classList.add("entryHolder","card", "bg-light", "mb-3");
 	entryHolder.innerHTML =`
@@ -62,7 +63,6 @@ function updateEntries(entry){
 
 /* Function to GET Project Data */
 async function getEntries(url=''){
-
 	const response = await fetch(url);
 	const entries = await response.json();
 
@@ -71,9 +71,7 @@ async function getEntries(url=''){
 		throw new Error;
 	}
 
-	entries.forEach(entry=>{
-		updateEntries(entry);
-	});
+	return entries;
 }
 
 /* Function to POST data */
@@ -92,15 +90,21 @@ async function postEntry(url='', data={}){
 		throw new Error;
 	}
 
-	updateEntries(data);
 	document.querySelector('.journal-entry-form').reset();
 }
 
 /* execution starts here */
 // Event listener to add function to existing HTML DOM element
 document.addEventListener('DOMContentLoaded', async ()=>{
+	/* Used to fech any previously stored records on the server */
 	try {
-		await getEntries('/all');
+		//get the previously stored records in the server
+		const journalEntries = await getEntries('/all');
+		//update the UI with retrived entries
+		journalEntries.forEach(entry=>{
+			updateUI(entry);
+		});
+		
 	} catch (err) {
 		handleError(err);
 	}
@@ -108,8 +112,14 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 	const generateBtn = document.querySelector('#generate');
 	generateBtn.addEventListener('click', async () => {
 		try{
+			//get user entered data
 			const data = await getData();
+			//post journal record to the server
 			await postEntry('/add', data);
+			//get thestired records form the server
+			const journalEntries = await getEntries('/all');
+			//update the UI 
+			updateUI(journalEntries[journalEntries.length - 1]);
 		} catch (err) {
 			handleError(err);
 		}
